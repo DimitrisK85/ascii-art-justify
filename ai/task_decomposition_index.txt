@@ -1,0 +1,173 @@
+Date: 2026-02-22
+Tool/Model: Codex (GPT-5) via terminal tools
+What was asked: Create a simple step-by-step task breakdown in tasks.md for ascii-art-color from start to completion.
+What was copied vs edited: No external text copied. Tasks were authored and edited directly based on user-provided objectives and AGENTS.md constraints.
+Task card affected: Project planning and decomposition (Tasks 1-10 in tasks.md).
+
+Date: 2026-02-22
+Tool/Model: Codex (GPT-5) via terminal tools
+What was asked: Convert planning into card style tasks and prepare tracking by card for future implementation logs.
+What was copied vs edited: Existing linear task list was rewritten into card format (TASK-01 to TASK-10) with explicit purpose/scope/done criteria.
+Task card affected: TASK-01, TASK-02, TASK-03, TASK-04, TASK-05, TASK-06, TASK-07, TASK-08, TASK-09, TASK-10.
+
+Date: 2026-02-22
+Tool/Model: Codex (GPT-5) via terminal tools
+What was asked: Add short per-task coding method instructions to each task card in tasks.md.
+What was copied vs edited: Existing TASK-01..TASK-10 cards were edited in place; added one concise "Method" bullet per card describing implementation/testing approach.
+Task card affected: TASK-01, TASK-02, TASK-03, TASK-04, TASK-05, TASK-06, TASK-07, TASK-08, TASK-09, TASK-10.
+
+Date: 2026-02-22
+Tool/Model: Codex (GPT-5) via terminal tools
+What was asked: Fix parser logic in main.go and wire it into main flow.
+What was copied vs edited: Edited existing main.go parser skeleton into a complete parseArgs function (len 2/3/4 handling, strict --color= prefix check, empty color check) and replaced old arg-count gate in main with parseArgs + required usage message.
+Task card affected: TASK-04 (Parser Implementation Green), TASK-08 (main flow wiring).
+
+Date: 2026-02-22
+Tool/Model: Codex (GPT-5) via terminal tools
+What was asked: Restore/fix parser in main.go after accidental overwrite with incomplete code.
+What was copied vs edited: Reapplied complete parseArgs implementation and main wiring; no external text copied.
+Task card affected: TASK-04 (Parser Implementation Green), TASK-08 (main flow wiring).
+
+Date: 2026-02-22
+Tool/Model: Codex (GPT-5) via terminal tools
+What was asked: Review and verify converter color function against newly added test.
+What was copied vs edited: Verified user implementation of ApplyColorToTextAllOccurences (slice-based ReplaceAll with ANSI reset) and validated with package/full test runs; no code edits by tool in this step.
+Task card affected: TASK-05 (Color Behavior Tests Red), TASK-06 (Color Rendering Green).
+
+Date: 2026-02-22
+Tool/Model: Codex (GPT-5) via terminal tools
+What was asked: Restore main.go parser after incomplete draft reintroduced compile errors.
+What was copied vs edited: Repaired parseArgs branches (len 2/3/4), restored parser call in main, restored required usage output; verified with full test run.
+Task card affected: TASK-04 (Parser Implementation Green), TASK-08 (Integration Implementation baseline stabilization).
+
+Date: 2026-02-22
+Tool/Model: Codex (GPT-5) via terminal tools
+What was asked: Extend parseArgs to return color context and wire color application flow in main.
+What was copied vs edited: Edited main.go parseArgs signature/returns to include input,color,substring,useColor,error; added color-name to ANSI mapping; wired conditional call to ApplyColorToTextAllOccurences in main; updated main_test.go parser invocation for new signature.
+Task card affected: TASK-04 (Parser Implementation), TASK-06 (Color Rendering), TASK-08 (Integration Implementation).
+
+Date: 2026-02-22
+Tool/Model: Codex (GPT-5) via terminal tools
+What was asked: Complete color rendering so runtime output actually colors ASCII-art matches.
+What was copied vs edited: Implemented ConvertTextWithColor/convertLineWithColor/buildColorMask in converter; switched main color path to use ConvertTextWithColor; added converter tests for substring-match coloring and whole-string coloring when substring omitted.
+Task card affected: TASK-06 (Color Rendering Green finalization), TASK-08 (Integration Implementation), TASK-10 (manual behavior verification).
+
+Date: 2026-02-22
+Tool/Model: Codex (GPT-5) via terminal tools
+What was asked: Validate cleanup after removing legacy ApplyColorToTextAllOccurences function and its tests.
+What was copied vs edited: No code edits by tool in this step; verified that deletion does not break build/tests.
+Task card affected: TASK-09 (Cleanup), TASK-10 (verification).
+
+Date: 2026-02-22
+Tool/Model: Codex (GPT-5) via terminal tools
+What was asked: Review functions and add comments for clarity.
+What was copied vs edited: Added concise function-level comments in main.go and internal/converter/converter.go; no logic changes.
+Task card affected: TASK-09 (Cleanup/refactor for clarity), TASK-10 (verification).
+
+Date: 2026-02-28
+Tool/Model: Codex (GPT-5) via terminal tools
+What was asked: Add new task cards for banner support after color support was completed.
+What was copied vs edited: Extended tasks.md with TASK-11 through TASK-15 covering banner contract, parser tests, parser implementation, banner loading integration, and verification; no code behavior changed.
+Task card affected: TASK-11, TASK-12, TASK-13, TASK-14, TASK-15.
+
+Date: 2026-02-28
+Tool/Model: Codex (GPT-5) via terminal tools
+What was asked: Review banner parser tests and remove an ambiguous invalid-case assumption.
+What was copied vs edited: Removed the `color with unknown banner` test case from main_test.go because the CLI shape is valid as color-substring mode under current grammar; verified full test suite passes.
+Task card affected: TASK-12 (Banner Parsing Tests Red), TASK-13 (Banner Parsing Implementation).
+
+Date: 2026-03-02
+Tool/Model: Codex (GPT-5) via terminal tools
+What was asked: Log the decision to refactor the parser to a struct before implementing output support, and add the next task cards.
+What was copied vs edited: Extended tasks.md with TASK-16 through TASK-22 covering parser refactor, output contract, output parsing tests/implementation, and output writing tests/implementation. Recorded the design decision that parseArgs should be refactored to a struct to support multiple flags cleanly.
+Task card affected: TASK-16, TASK-17, TASK-18, TASK-19, TASK-20, TASK-21, TASK-22.
+
+Date: 2026-03-02
+Tool/Model: Codex (GPT-5) via terminal tools
+What was asked: Refactor parseArgs to return a cliOptions struct before adding more flags.
+What was copied vs edited: Refactored parser shape from many return values to a single cliOptions struct in args.go; updated main.go and main_test.go to consume the struct while preserving existing color and banner behavior.
+Task card affected: TASK-17.
+
+Date: 2026-03-02
+Tool/Model: Codex (GPT-5) via terminal tools
+What was asked: Add output flag parsing support using --output=<fileName.txt>.
+What was copied vs edited: Extended parser tests with valid/invalid output flag cases; implemented output parsing in args.go by setting OutputFile on cliOptions, rejecting empty filenames, malformed output flag forms, and filenames without .txt suffix.
+Task card affected: TASK-18, TASK-19, TASK-20.
+
+Date: 2026-03-02
+Tool/Model: Codex (GPT-5) via terminal tools
+What was asked: Add output-file writing support and verify written contents.
+What was copied vs edited: Added output.go with writeOutputToFile helper; upgraded tests from non-empty file checks to exact rendered ASCII-art content checks; integrated output mode in main.go to write rendered plain ASCII-art to file when OutputFile is set.
+Task card affected: TASK-21, TASK-22.
+
+Date: 2026-03-02
+Tool/Model: Codex (GPT-5) via terminal tools
+What was asked: Record the parser design decision for future flags.
+What was copied vs edited: Documented the decision that the CLI supports one leading mode flag in args[1] at a time (currently color or output, later align), rather than combining multiple flags, to keep parsing explicit and maintainable.
+Task card affected: TASK-18, future align-related planning.
+
+Date: 2026-03-03
+Tool/Model: Codex (GPT-5) via terminal tools
+What was asked: Add align-related task cards and log the standalone align-mode decision.
+What was copied vs edited: Extended tasks.md with TASK-23 through TASK-29 covering align contract, parser tests/implementation, alignment helper tests/implementation, terminal width handling, and verification. Recorded the design decision that --align remains a standalone leading mode flag and is not combined with color or output.
+Task card affected: TASK-23, TASK-24, TASK-25, TASK-26, TASK-27, TASK-28, TASK-29.
+
+Date: 2026-03-03
+Tool/Model: Codex (GPT-5) via terminal tools
+What was asked: Add parser tests for the new standalone --align mode.
+What was copied vs edited: Extended main_test.go with valid align cases (left, right, center, justify) and invalid align cases (malformed flag, empty value, unsupported value) while keeping align as a standalone leading mode.
+Task card affected: TASK-23, TASK-24.
+
+Date: 2026-03-03
+Tool/Model: Codex (GPT-5) via terminal tools
+What was asked: Implement align parsing support in args.go.
+What was copied vs edited: Added an --align parsing branch in args.go, populated opts.Align for valid values, added isValidAlign helper, and preserved existing color/output/banner behavior. Verified full test suite passes.
+Task card affected: TASK-25.
+
+Date: 2026-03-03
+Tool/Model: Codex (GPT-5) via terminal tools
+What was asked: Add and validate align helper tests before runtime integration.
+What was copied vs edited: Added align_test.go with unit tests for left, right, center, and justify alignment using fixed widths and deterministic expected output.
+Task card affected: TASK-26.
+
+Date: 2026-03-03
+Tool/Model: Codex (GPT-5) via terminal tools
+What was asked: Implement alignment helpers in align.go.
+What was copied vs edited: Added alignLeft, alignRight, alignCenter, and alignJustify helpers in align.go; implemented full-width padding behavior and justify spacing distribution.
+Task card affected: TASK-27.
+
+Date: 2026-03-03
+Tool/Model: Codex (GPT-5) via terminal tools
+What was asked: Clarify deterministic spacing rules for alignment.
+What was copied vs edited: Documented the decisions that center alignment places any odd extra space on the right, and justify distributes remainder spaces from left to right across gaps using word-length-based spacing rather than raw line length.
+Task card affected: TASK-26, TASK-27, TASK-28.
+
+Date: 2026-03-08
+Tool/Model: Codex (GPT-5) via terminal tools
+What was asked: Fix justify layout artifact where top row looked visually off for inputs containing words like "pre" (blank top rows in font).
+What was copied vs edited: Edited align.go only. Reworked alignJustify to compute spacing per row from visible row content (trim-right) before distributing gaps, and added row-width-aware right padding to terminal width.
+Task card affected: TASK-27 (Alignment Helpers), TASK-28 (Alignment spacing rules), TASK-29 (Runtime verify align behavior).
+
+Date: 2026-03-08
+Tool/Model: Codex (GPT-5) via terminal tools
+What was asked: User reported justify output was visually too distorted after row-aware spacing change.
+What was copied vs edited: Edited align.go only. Reverted justify spacing strategy to fixed per-word block widths (the per-row width variant caused excessive drift in rows containing all-space glyph rows).
+Task card affected: TASK-27 (Alignment Helpers).
+
+Date: 2026-03-08
+Tool/Model: Codex (GPT-5) via terminal tools
+What was asked: Resolve opposite visual behavior between "hello pr ty fce" and "hello   pre ty fce" in justify alignment.
+What was copied vs edited: Edited align.go only. Replaced fixed-word-width gap assembly with row-fragment assembly: each row trims trailing spaces, treats fully blank word rows as one space, computes spacing per row, then distributes base/extra spaces across gaps.
+Task card affected: TASK-27 (Alignment helpers/justify strategy).
+
+Date: 2026-03-08
+Tool/Model: Codex (GPT-5) via terminal tools
+What was asked: Fix a user-facing justify regression where spacing drifted after row-based changes.
+What was copied vs edited: Edited align.go only. Reworked alignJustify to compute spacing once from fixed per-word rendered widths and distribute those fixed gaps uniformly per row (plus minimal right padding), instead of recalculating spacing per-row from already-trimmed fragments.
+Task card affected: TASK-27 (Alignment helpers), TASK-28 (Alignment spacing rules).
+
+Date: 2026-03-08
+Tool/Model: Codex (GPT-5) via terminal tools
+What was asked: Add or refine justify tests and verify space-normalization behavior.
+What was copied vs edited: Updated `align_test.go` (`TestAlignJustifyCompressesExtraSpacesInInput`) to run with a width large enough to exercise justify logic instead of width fallback; confirmed stable equality output for inputs with multiple internal spaces and re-ran full tests.
+Task card affected: TASK-27 (Alignment helpers/justify behavior), TASK-26 (alignment helper testing).
