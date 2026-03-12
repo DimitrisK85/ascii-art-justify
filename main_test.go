@@ -1,8 +1,8 @@
 package main
 
 import (
-	"ascii-art/internal/banner"
-	"ascii-art/internal/converter"
+	"ascii-art-justify/internal/banner"
+	"ascii-art-justify/internal/converter"
 	"os"
 	"path/filepath"
 	"reflect"

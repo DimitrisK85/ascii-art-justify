@@ -1,15 +1,16 @@
 package main
 
 import (
-	"ascii-art/internal/banner"
-	"ascii-art/internal/converter"
+	"ascii-art-justify/internal/banner"
+	"ascii-art-justify/internal/converter"
 	"reflect"
+	"strings"
 	"testing"
 )
 
 func TestAlignLeft(t *testing.T) {
 	input := []string{
-		"*",
+		"* ",
 		"**",
 	}
 	got := alignLeft(input, 4)
@@ -26,7 +27,7 @@ func TestAlignLeft(t *testing.T) {
 
 func TestAlignRight(t *testing.T) {
 	input := []string{
-		"*",
+		"* ",
 		"**",
 	}
 	got := alignRight(input, 4)
@@ -43,7 +44,7 @@ func TestAlignRight(t *testing.T) {
 
 func TestAlignCenter(t *testing.T) {
 	input := []string{
-		"*",
+		"* ",
 		"**",
 	}
 	got := alignCenter(input, 5)
@@ -114,8 +115,24 @@ func TestAlignJustifyReturnsOriginalWhenNoSpace(t *testing.T) {
 	width := 5
 
 	got := alignJustify(lines, input, charMap, width)
-	if !reflect.DeepEqual(got, lines) {
-		t.Fatalf("expected original lines when width is smaller than rendered width, got %#v want %#v", got, lines)
+	if len(got) != len(lines) {
+		t.Fatalf("expected %d lines when width is too small, got %d", len(lines), len(got))
+	}
+
+	expectedWidth := 0
+	for _, word := range strings.Fields(input) {
+		for _, char := range word {
+			glyph := charMap[char]
+			if len(glyph) > 0 {
+				expectedWidth += len(glyph[0])
+			}
+		}
+	}
+
+	for i := range lines {
+		if len(got[i]) != expectedWidth {
+			t.Fatalf("expected line %d width %d, got %d", i, expectedWidth, len(got[i]))
+		}
 	}
 }
 

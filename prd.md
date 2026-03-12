@@ -1,117 +1,135 @@
 # Product Requirements Document (PRD)
-## ASCII-Art-Color Generator
+## ASCII-Art Tool
 
 ### Project Overview
-A command-line program written in Go that converts text strings into ASCII art representations using predefined banner templates with optional color support for entire strings or specific substrings.
+A command-line program written in Go that converts text strings into ASCII art using predefined banner templates, with optional color rendering, output redirection, and line alignment.
 
 ### Objectives
-- Accept a string as a command-line argument
-- Output the string in graphical ASCII art format
-- Support multiple banner styles (standard, shadow, thinkertoy)
-- Handle various input types: letters, numbers, spaces, special characters, and newlines
-- Apply colors to entire output or specific substrings
+- Convert an input string into ASCII-art blocks.
+- Support selectable banners: `standard`, `shadow`, and `thinkertoy`.
+- Support optional color rendering for the whole text or a substring.
+- Support writing output to a `.txt` file.
+- Support alignment modes: `left`, `right`, `center`, and `justify`.
 
 ### Technical Requirements
 
 #### 1. Input Specifications
-- Accept 1-3 command-line arguments:
-  - 1 arg: text to convert
-  - 2 args: `--color=<color>` flag and text (colors entire string)
-  - 3 args: `--color=<color>` flag, substring to color, and text
-- Support printable ASCII characters
-- Handle special character `\n` for newlines
-- Process empty strings and newline-only inputs
-- Supported colors: red, green, yellow, blue, magenta, cyan, white, black, orange
+- Supported CLI forms:
+  - `go run . "text"`
+  - `go run . "text" [BANNER]`
+  - `go run . --color=<color> "text"`
+  - `go run . --color=<color> "text" [BANNER]`
+  - `go run . --color=<color> "<substring>" "text"`
+  - `go run . --color=<color> "<substring>" "text" [BANNER]`
+  - `go run . --output=<filename>.txt "text"`
+  - `go run . --output=<filename>.txt "text" [BANNER]`
+  - `go run . --align=<left|right|center|justify> "text"`
+  - `go run . --align=<left|right|center|justify> "text" [BANNER]`
+- Reject invalid argument count and malformed flags.
+- Validate `--color` values from the supported color list.
+- Validate `--output` has a non-empty `.txt` filename.
+- Validate `--align` values only from `left`, `right`, `center`, `justify`.
+- Validate input runes:
+  - printable ASCII `32..126` is allowed,
+  - newline `10` is allowed for multi-line input.
+- `\n` in input should be interpreted as a line break (including escaped `\\n` text passed by shell).
 
 #### 2. Banner File Format
-- Each character has exactly 8 lines of height
-- Characters are separated by a newline (`\n`)
-- Three banner files must be supported:
-  - `standard.txt`
-  - `shadow.txt`
-  - `thinkertoy.txt`
-- Banner files should not be modified
+- Each character must have 8 rendered lines.
+- Character definitions are separated by a blank line in banner files.
+- Required banners:
+  - `banners/standard.txt`
+  - `banners/shadow.txt`
+  - `banners/thinkertoy.txt`
+- Banner files are input assets and should not be modified by the program.
 
 #### 3. Output Requirements
-- Each line of output corresponds to one line across all characters
-- Characters are printed horizontally, line by line
-- Empty input (`""`) produces no output
-- Single newline (`"\n"`) produces one blank line
-- Multiple newlines produce corresponding blank lines
-- Trailing newline in output (8 lines per text line)
-- ANSI color codes applied during conversion for accurate substring coloring
+- Conversion is row-based: each ASCII-art line is rendered across all characters of one input line.
+- Each logical text line yields 8 ASCII-art lines.
+- Empty input (`""`) produces no output.
+- Single newline (`"\n"`) produces one blank line block.
+- Consecutive newlines produce corresponding blank line blocks.
+- `--color` inserts ANSI color start/end sequences around matched glyph regions.
+- `--output=<filename>.txt` writes the same rendered output to file and prints a confirmation message.
+- `--align` applies to final rendered lines using terminal width.
+  - if rendered width is >= terminal width, lines are returned unchanged.
+  - `justify` keeps left alignment for single-word input.
 
 #### 4. Error Handling
-- Return "ERROR" for any file format issues
-- Return "ERROR" for invalid banner files
-- Handle edge cases gracefully
+- Invalid arguments must return a clear `Error: ...` message and reference usage instructions.
+- Invalid banner argument is treated as invalid format unless recognized.
+- Empty/invalid output file names and wrong extensions are rejected.
+- Unsupported color must be rejected with supported-color guidance.
+- Unsupported alignment value must be rejected with supported alignment guidance.
+- Banner loader failures are reported as errors.
+- Output write failures are reported as errors.
 
 #### 5. Programming Constraints
 - Language: Go
-- Packages: Standard library only
-- Code must follow Go best practices
-- Unit tests required (TDD approach)
+- Packages: Go standard library only
+- Code follows readable, explicit Go style
+- Unit tests and integration-like tests are required (TDD-aligned workflow)
 
 ### Functional Requirements
 
 #### Core Functionality
-1. **Parse Command-Line Arguments**
-   - Read 1-3 arguments from command line
-   - Parse `--color=<color>` flag if present
-   - Identify substring to color (if 3 args provided)
-   - Validate input exists
+1. **Parse Arguments**
+   - Detect optional trailing banner first (`standard`, `shadow`, `thinkertoy`).
+   - Recognize exactly one leading mode:
+     - none
+     - `--color=<color>`
+     - `--output=<filename>.txt`
+     - `--align=<left|right|center|justify>`
+   - For `--color` with 3-arg form, parse substring + text.
 
-2. **Load Banner File**
-   - Read appropriate banner file
-   - Parse character definitions
-   - Store character mappings
+2. **Load Banner**
+   - Load selected banner file path `banners/<name>.txt`.
+   - Build a rune-to-lines mapping for each printable ASCII glyph used.
 
-3. **Process Input String**
-   - Split input by `\n` for multi-line support
-   - Identify character positions to color based on substring matches
-   - Convert each character to its ASCII art representation
-   - Apply ANSI color codes during conversion
-   - Handle spaces and special characters
+3. **Render Text**
+   - Split input by newline into logical lines.
+   - Convert each line to ASCII-art by concatenating glyph rows.
+   - Apply color masking and ANSI wrapping when `--color` is active.
 
-4. **Generate Output**
-   - Combine character representations horizontally
-   - Insert color codes at appropriate positions
-   - Print 8 lines for each line of text
-   - Add blank line for standalone `\n`
+4. **Post-process and Emit**
+   - Apply requested alignment when `--align` is set.
+   - Print final lines to stdout unless `--output` is set.
+   - If `--output` is set, write the same rendered lines to the requested file.
 
 ### Test Cases (from Usage Examples)
 
 | Input | Expected Behavior |
 |-------|------------------|
+| Input | Expected Behavior |
+|-------|------------------|
 | `""` | No output |
-| `"\n"` | Single blank line |
-| `"Hello\n"` | ASCII art of "Hello" (8 lines) |
-| `"hello"` | ASCII art of "hello" (8 lines) |
-| `"HeLlO"` | Mixed case ASCII art (8 lines) |
-| `"Hello There"` | ASCII art with space (8 lines) |
-| `"1Hello 2There"` | ASCII art with numbers (8 lines) |
-| `"{Hello There}"` | ASCII art with special chars (8 lines) |
-| `"Hello\nThere"` | Two separate ASCII art blocks |
-| `"Hello\n\nThere"` | Two blocks with blank line between |
-| `--color=red "Hello"` | Red colored ASCII art of "Hello" |
-| `--color=blue "ell" "Hello"` | ASCII art with only "ell" in blue |
+| `"\n"` | One blank line output |
+| `"Hello\n"` | ASCII art of `Hello` (8 lines, with line break handling) |
+| `"Hello\nThere"` | Two separate ASCII-art blocks |
+| `"Hello\n\nThere"` | Two blocks with one blank block between |
+| `--color=red "Hello"` | Entire output colored in red |
+| `--color=blue "ell" "Hello"` | Only `ell` colored in blue |
+| `--output=art.txt "Hello"` | Output written to `art.txt` |
+| `--align=right "Hello"` | Right alignment to terminal width |
+| `--align=justify "Hello there"` | Justified spacing behavior across words |
+| `--align=left shadow "Hello"` | Left alignment with selected banner |
 
 ### Project Structure (Suggested)
 ```
-ascii-art-color/
+ascii-art-justify/
 ├── main.go              # Entry point with color argument parsing
 ├── internal/
 │   ├── banner/          # Banner loading logic
-│   ├── converter/       # Text to ASCII conversion with color support
-│   └── color/           # Color parsing and ANSI code handling
+│   └── converter/       # Text to ASCII conversion with color support
 ├── banners/             # Banner template files
 │   ├── standard.txt
 │   ├── shadow.txt
 │   └── thinkertoy.txt
-├── tests/               # Unit tests
+├── *_test.go            # Go test files (main, converter, align, banner loader)
 ├── ai/                  # AI conversation logs
-│   └── ai.txt
+│   └── task_decomposition_index.txt
 ├── agents.md            # Agent guidelines
+├── tasks.md             # Task cards and completion status
 └── prd.md               # This document
 ```
 
@@ -129,7 +147,7 @@ ascii-art-color/
 - Unit tests cover core functionality including color features
 - Code follows Go best practices
 - No external dependencies used
-- Error handling returns "ERROR" appropriately
+- Clear `Error: ...` style messages are consistent
 - Program handles edge cases correctly
 
 ### Non-Functional Requirements

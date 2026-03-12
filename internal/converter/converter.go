@@ -3,13 +3,13 @@ package converter
 import "strings"
 
 // ConvertLine converts a single line of text to ASCII art.
-// Returns 8 lines of ASCII art (or 1 line with "\n" for empty input).
+// Returns 8 lines of ASCII art (or empty string "" for empty input).
 func ConvertLine(charMap map[rune][]string, text string) []string {
 	// Create 8 empty lines for ASCII art output
 	output := make([]string, 8)
 	// Handle empty string case
 	if text == "" {
-		emptyOutput := []string{"\n"}
+		emptyOutput := []string{""}
 		return emptyOutput
 	}
 	// Process each character in the input text
@@ -29,8 +29,9 @@ func ConvertLine(charMap map[rune][]string, text string) []string {
 // ConvertText converts text with newlines (\n) to ASCII art.
 // Splits input by \n and converts each line separately.
 func ConvertText(char map[rune][]string, input string) []string {
-	// Split input by literal \n string
-	lines := strings.Split(input, `\n`)
+	input = strings.ReplaceAll(input, `\n`, "\n") // Handle literal \n in input as actual newlines
+	//Split input by literal \n string
+	lines := strings.Split(input, "\n")
 	var result []string
 
 	// Convert each line and append to result
@@ -45,7 +46,8 @@ func ConvertText(char map[rune][]string, input string) []string {
 // ConvertTextWithColor converts text to ASCII art and colors matched characters.
 // If substring is empty, all input characters are colored.
 func ConvertTextWithColor(charMap map[rune][]string, input, substring, colorCode string) []string {
-	lines := strings.Split(input, `\n`)
+	input = strings.ReplaceAll(input, `\n`, "\n") // Handle literal \n in input as actual newlines
+	lines := strings.Split(input, "\n")
 	var result []string
 
 	for _, line := range lines {
@@ -60,7 +62,7 @@ func ConvertTextWithColor(charMap map[rune][]string, input, substring, colorCode
 func convertLineWithColor(charMap map[rune][]string, text, substring, colorCode string) []string {
 	output := make([]string, 8)
 	if text == "" {
-		return []string{"\n"}
+		return []string{""}
 	}
 
 	colorMask := buildColorMask(text, substring)

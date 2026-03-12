@@ -1,4 +1,4 @@
-# ascii-art-color Task Cards
+# ascii-art-justify Task Cards
 
 ## TASK-01 Baseline Freeze
 - Purpose: Confirm current project behavior before color changes.
@@ -12,16 +12,17 @@
   - `go run . "text"`
   - `go run . --color=<color> "text"`
   - `go run . --color=<color> <substring> "text"`
-  - Invalid format prints exact usage message.
-- Method: Translate each rule into test cases before coding parser logic.
-- Done when: Rules are represented in tests.
+  - Also supports optional trailing banner in each supported mode.
+  - Invalid format prints an error plus usage guidance.
+  - Method: Translate each rule into test cases before coding parser logic.
+  - Done when: Rules are represented in tests.
 
 ## TASK-03 Parser Tests (Red)
 - Purpose: Create failing tests for argument parsing.
 - Scope:
-  - Valid: `len==2`, `len==3`, `len==4`
+  - Valid: `len==2`, `len==3`, `len==4` (after optional banner detection)
   - Invalid: bad flag format
-  - Invalid: argument count `<2` or `>=5`
+  - Invalid: argument count `<2` or extra/unrecognized combinations
 - Method: Add table-driven tests for args -> expected parse result or usage error.
 - Done when: Tests fail for missing parser behavior.
 
@@ -151,11 +152,11 @@
 - Purpose: Define how `--output=<fileName.txt>` fits with existing banner and color features.
 - Scope:
   - `go run . --output=<fileName.txt> [STRING] [BANNER]`
-  - `go run . --output=<fileName.txt> --color=<color> ...`
+  - No color alignment chaining is supported in the current mode.
   - Empty or malformed output flag is invalid
-  - Final exact usage text will be normalized after all planned flags are added
-- Method: Lock a strict and extensible CLI shape before adding parser tests.
-- Done when: Accepted output forms are represented in tests.
+  - Final exact usage guidance is provided from the main error path.
+  - Method: Lock a strict and extensible CLI shape before adding parser tests.
+  - Done when: Accepted output forms are represented in tests.
 
 ## TASK-19 Output Parsing Tests (Red)
 - Purpose: Add failing tests for valid and invalid `--output` flag parsing.
@@ -225,12 +226,13 @@
 ## TASK-26 Align Helper Tests (Red)
 - Purpose: Define alignment behavior on rendered ASCII-art lines.
 - Scope:
-  - Left alignment leaves lines unchanged
+  - Left alignment pads lines to the target width (baseline behavior)
   - Right alignment pads to terminal width
   - Center alignment pads evenly
   - Justify distributes spacing across word gaps
 - Method: Test alignment as a post-processing step on rendered `[]string`, independent from banner loading.
 - Done when: Alignment helper tests fail before implementation.
+Status: Completed
 
 ## TASK-27 Align Implementation (Green)
 - Purpose: Implement line alignment for rendered ASCII-art output.
@@ -258,3 +260,35 @@
   - Full test suite
 - Method: Confirm aligned ASCII-art output matches the intended placement and that no other modes regress.
 - Done when: Alignment outputs look correct and tests remain green.
+Status: Completed
+
+## Completion Log
+- [x] TASK-01 Baseline Freeze
+- [x] TASK-02 CLI Contract Definition
+- [x] TASK-03 Parser Tests (Red)
+- [x] TASK-04 Parser Implementation (Green)
+- [x] TASK-05 Color Behavior Tests (Red)
+- [x] TASK-06 Color Rendering (Green)
+- [x] TASK-07 CLI Integration Tests (Red)
+- [x] TASK-08 Integration Implementation (Green)
+- [x] TASK-09 Cleanup (Clean)
+- [x] TASK-10 Audit Verification
+- [x] TASK-11 Banner Contract Definition
+- [x] TASK-12 Banner Parsing Tests (Red)
+- [x] TASK-13 Banner Parsing Implementation (Green)
+- [x] TASK-14 Banner Loading Integration
+- [x] TASK-15 Banner Verification
+- [x] TASK-16 Parser Refactor Decision Log
+- [x] TASK-17 Parser Struct Refactor (Clean)
+- [x] TASK-18 Output Contract Definition
+- [x] TASK-19 Output Parsing Tests (Red)
+- [x] TASK-20 Output Parsing Implementation (Green)
+- [x] TASK-21 Output Writing Tests (Red)
+- [x] TASK-22 Output Writing Implementation (Green)
+- [x] TASK-23 Align Contract Definition
+- [x] TASK-24 Align Parsing Tests (Red)
+- [x] TASK-25 Align Parsing Implementation (Green)
+- [x] TASK-26 Align Helper Tests (Red)
+- [x] TASK-27 Align Implementation (Green)
+- [x] TASK-28 Terminal Width Handling
+- [x] TASK-29 Align Verification

@@ -2,6 +2,7 @@ package banner
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 )
 
@@ -12,8 +13,7 @@ func LoadBannerFile(input string) (output map[rune][]string, err error) {
 	// Open the banner file
 	file, err := os.Open(input)
 	if err != nil {
-		println("Error reading the input file")
-		return output, err
+		return output, fmt.Errorf("failed to open banner file: %w", err)
 	}
 	defer file.Close()
 

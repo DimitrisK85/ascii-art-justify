@@ -1,8 +1,8 @@
 package main
 
 import (
-	"ascii-art/internal/banner"
-	"ascii-art/internal/converter"
+	"ascii-art-justify/internal/banner"
+	"ascii-art-justify/internal/converter"
 	"fmt"
 	"os"
 )
@@ -11,15 +11,18 @@ import (
 func main() {
 	opts, err := parseArgs(os.Args)
 	if err != nil {
-		fmt.Println("Usage: go run . [OPTION] [STRING]")
-		fmt.Println("EX: go run . --color=<color> <substring to be colored> \"something\"")
+		fmt.Printf("Error: %v\n", err)
+		fmt.Println("Check README.md for usage instructions.")
+		//fmt.Printf("Usage: go run . [OPTION] [SUBSTRING] [STRING] [BANNER]\n")
+		//fmt.Println("EX: go run . --color=<color> <substring to be colored> \"something\" <banner>")
 		return
 	}
 
 	// Validate input contains only printable ASCII characters (32-126)
 	for _, char := range opts.Input {
-		if char < 32 || char > 126 {
-			fmt.Println("Please only use : printable ASCII characters 32 to 126 (use man ascii if needed)")
+		if char != 10 && (char < 32 || char > 126) { // Allow newline (10) for multi-line input
+			fmt.Printf("Error: Invalid character '%c' (codepoint %d) in input.\n", char, char)
+			fmt.Println("Use only ASCII characters 32 to 126 (use man ascii if needed)")
 			return
 		}
 	}
@@ -28,14 +31,15 @@ func main() {
 	bannerPath := "banners/" + opts.Banner + ".txt"
 	charMap, err := banner.LoadBannerFile(bannerPath)
 	if err != nil {
-		fmt.Println("Error loading", bannerPath)
+		fmt.Println("Error: failed to load banner file:", bannerPath, err)
+		//fmt.Println("Error loading", bannerPath)
 		return
 	}
 
 	if opts.UseColor {
 		colorCode, ok := colorCodeFromName(opts.Color)
 		if !ok {
-			fmt.Println("Unsupported color:", opts.Color)
+			fmt.Println("Error: Unsupported color:", opts.Color)
 			fmt.Println("Supported colors: black, red, green, yellow, blue, magenta, cyan, white")
 			return
 		}
@@ -51,7 +55,7 @@ func main() {
 	if opts.OutputFile != "" {
 		err := writeOutputToFile(opts, art)
 		if err != nil {
-			fmt.Println("Error writing output to file:", err)
+			fmt.Println("Error: writing output to file:", err)
 		} else {
 			fmt.Println("Output written to", opts.OutputFile)
 		}
@@ -69,7 +73,7 @@ func main() {
 		case "justify":
 			art = alignJustify(art, opts.Input, charMap, width)
 		default:
-			fmt.Println("Unsupported alignment:", opts.Align)
+			fmt.Println("Error: Unsupported alignment:", opts.Align)
 			fmt.Println("Supported alignments: left, right, center, justify")
 			return
 		}

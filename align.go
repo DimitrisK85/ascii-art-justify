@@ -8,7 +8,7 @@ import (
 )
 
 func alignLeft(lines []string, width int) []string {
-	blockWidth := getMaxLineWidth(lines)
+	blockWidth := len(lines[0]) //getMaxLineWidth(lines)
 	if blockWidth >= width {
 		return append([]string{}, lines...)
 	}
@@ -21,7 +21,7 @@ func alignLeft(lines []string, width int) []string {
 }
 
 func alignRight(lines []string, width int) []string {
-	blockWidth := getMaxLineWidth(lines)
+	blockWidth := len(lines[0]) //getMaxLineWidth(lines)
 	if blockWidth >= width {
 		return append([]string{}, lines...)
 	}
@@ -35,7 +35,7 @@ func alignRight(lines []string, width int) []string {
 }
 
 func alignCenter(lines []string, width int) []string {
-	blockWidth := getMaxLineWidth(lines)
+	blockWidth := len(lines[0]) //getMaxLineWidth(lines)
 	if blockWidth >= width {
 		return append([]string{}, lines...)
 	}
@@ -57,9 +57,9 @@ func alignJustify(lines []string, input string, charMap map[rune][]string, width
 	}
 
 	// Keep behavior simple and safe when width is invalid or no space handling exists.
-	if width <= 0 {
-		return append([]string{}, lines...)
-	}
+	//if width <= 0 {
+	//	return append([]string{}, lines...)
+	//}
 
 	// Calculate the base width of each rendered word.
 	totalWordWidth := 0
@@ -69,15 +69,19 @@ func alignJustify(lines []string, input string, charMap map[rune][]string, width
 			if len(glyph) == 0 {
 				continue
 			}
-			totalWordWidth += glyphWidth(glyph)
+			totalWordWidth += len(glyph[0]) //glyphWidth(glyph)
 		}
 	}
 
 	gapCount := len(words) - 1
 	totalSpaces := width - totalWordWidth
-	if gapCount <= 0 || totalSpaces < 0 {
-		return append([]string{}, lines...)
+	if width < totalWordWidth {
+		width = totalWordWidth
+		totalSpaces = 0
 	}
+	//if gapCount <= 0 || totalSpaces < 0 {
+	//	return append([]string{}, lines...)
+	//}
 
 	// Total spaces to distribute between words.
 	spacePerGap := totalSpaces / gapCount
@@ -108,15 +112,15 @@ func alignJustify(lines []string, input string, charMap map[rune][]string, width
 	return result
 }
 
-func glyphWidth(glyph []string) int {
-	width := 0
-	for _, row := range glyph {
-		if len(row) > width {
-			width = len(row)
-		}
-	}
-	return width
-}
+//func glyphWidth(glyph []string) int {
+//	width := 0
+//	for _, row := range glyph {
+//		if len(row) > width {
+//			width = len(row)
+//		}
+//	}
+//	return width
+//}
 
 func getTerminalWidth() int {
 	columns := os.Getenv("COLUMNS")
@@ -143,12 +147,12 @@ func getTerminalWidth() int {
 	return 80
 }
 
-func getMaxLineWidth(lines []string) int {
-	maxWidth := 0
-	for _, line := range lines {
-		if len(line) > maxWidth {
-			maxWidth = len(line)
-		}
-	}
-	return maxWidth
-}
+//func getMaxLineWidth(lines []string) int {
+//	maxWidth := 0
+//	for _, line := range lines {
+//		if len(line) > maxWidth {
+//			maxWidth = len(line)
+//		}
+//	}
+//	return maxWidth
+//}

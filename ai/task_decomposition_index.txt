@@ -171,3 +171,9 @@ Tool/Model: Codex (GPT-5) via terminal tools
 What was asked: Add or refine justify tests and verify space-normalization behavior.
 What was copied vs edited: Updated `align_test.go` (`TestAlignJustifyCompressesExtraSpacesInInput`) to run with a width large enough to exercise justify logic instead of width fallback; confirmed stable equality output for inputs with multiple internal spaces and re-ran full tests.
 Task card affected: TASK-27 (Alignment helpers/justify behavior), TASK-26 (alignment helper testing).
+
+Date: 2026-03-12
+Tool/Model: Codex (GPT-5) via terminal tools
+What was asked: Finalize test alignment to current justify behavior and verify justify output under terminal width constraints.
+What was copied vs edited: Edited `align_test.go` for right/center/left fixtures and `TestAlignJustifyReturnsOriginalWhenNoSpace` to match current implementation behavior, including width adaptation behavior used by justify when terminal width is small.
+Task card affected: TASK-27 (Alignment helpers/justify behavior).

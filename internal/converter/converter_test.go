@@ -1,7 +1,7 @@
 package converter
 
 import (
-	"ascii-art/internal/banner"
+	"ascii-art-justify/internal/banner"
 	"reflect"
 	"strings"
 	"testing"
